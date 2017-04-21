@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="row">
+      <div class="col-sm-8">
+      </div>
+      <div class="col-sm-4">
+        <a href="/logout"class="btn btn-primary"> Logout </a> <a href="/secrets" class="btn btn-primary"> View Secrets </a>
+      </div>
+  </div>
+  <div class='row'>
+      <div class='col-md-12'>
+        <h1><%= @user.name %></h1>
+        <div class="form-group">
+          <form action="/secrets" method="post">
+            <input type='hidden' name="authenticity_token" value="<%= form_authenticity_token %>">
+            <label for="Secret"> New Secrets </label>
+            <textarea class="form-control" rows="5" id="comment" name="secret[content]" placeholder="Enter your secrets.." wrap="soft"></textarea>
+            <br>
+            <button type="submit" class="btn btn-danger">Tell errrybody</button>
+          </form>
+        </div>
+      </div>
+  </div>
+  <hr>
+  <div class='row'>
+    <div class='col-md-6'>
+        <div>
+          <% @user.secrets.order("created_at DESC").each do |secret| %>
+
+            <h3><%= secret.user.name %> | <%= secret.created_at.strftime "%B %-d, %Y" %></h3>
+            <p><%= secret.content %></p>
+            <p> likes: <%= @like.count%></p>
+            <a href="/secrets/<%= secret.id %>" class="btn btn-warning btn-xs" data-method="delete">Delete</a>
+
+          <% end %>
+
+        </div>
+    </div>
+      <div class='col-md-6'>
+        <% @secrets.order("created_at DESC").each do |secret| %>
+
+
+            <% if @user.secret_like.include?(secret) %>
+             <h3><%= secret.user.name %> | <%= secret.created_at.strftime "%B %-d, %Y" %></h3>
+             <p><%= secret.content %></p>
+            <% end %>
+
+            <!-- <% if secret.user_id == @user.id %>
+                <a href="/secrets/<%= secret.id %>" class="btn btn-warning btn-xs" data-method="delete">Delete</a>
+            <% end %> -->
+
+        <% end %>
+      </div>
+  </div>
+</div>
